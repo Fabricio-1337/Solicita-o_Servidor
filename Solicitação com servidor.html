@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Qualquer</title>
+</head>
+<body>
+    <button type="button" onclick="buscaDados()">Buscar Questoes</button>
+    <table border="2px">
+        <thead>
+            <tr>
+            <th><strong>Marca</strong></th>
+            <th><strong>Modelo</strong></th>
+            <th><strong>Ano</strong></th>
+            </tr>
+        </thead>
+       <tbody id="tabela">
+
+       </tbody>
+    </table>
+
+</body>
+
+<script type="text/javascript">
+
+    let buscaDados = () => {
+        let r = new XMLHttpRequest(); // XMLRHttpRequest --> é a classe responsável por fazer
+                                      // requisições ajax.
+
+        // o método open da classe XMLHttpRequest, abre um canal e configura uma requisição
+        r.open('get', 'http://192.168.1.128:3000/motos', true);
+
+        // o evento de controle de qualquer status que muda de acordo com a requisição
+        // quem trata é a função
+        r.onreadystatechange = () => {
+            // todo o Roundtrip foi concluído com sucesso
+            if (r.readyState === XMLHttpRequest.DONE && r.status === 200){
+                let obJson = JSON.parse(r.responseText); // Faz o parseamento do json em objeto js
+                
+
+                for(var i = 0 ; i < obJson.length ; i++){
+                    let tr1 = document.createElement('tr');
+                    document.querySelector('#tabela').appendChild(tr1)
+                    
+                    let td = document.createElement('td'); 
+                    td.textContent = obJson[i].marca;
+                    document.querySelector('#tabela').appendChild(td);
+
+                    let td1 = document.createElement('td'); 
+                    td1.textContent = obJson[i].modelo;
+                    document.querySelector('#tabela').appendChild(td1);
+
+                    let td2 = document.createElement('td'); 
+                    td2.textContent = obJson[i].ano;
+                    document.querySelector('#tabela').appendChild(td2);
+                    
+                }
+
+                console.log(obJson)
+            }
+
+        }
+
+        // envia a requisição para o servidor;
+        r.send();
+       
+       
+
+
+    }
+
+
+</script>
+
+</html>
